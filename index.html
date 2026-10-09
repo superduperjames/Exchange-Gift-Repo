@@ -1,257 +1,744 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Exchange Gifter</title>
+  <title>2026 Exchange Gift Form</title>
+
   <style>
-    /* General Styles for All Screens */
+    :root {
+      --blue: #376E9D;
+      --red: #E2403E;
+      --yellow: #DEAC2F;
+      --green: #7FA347;
+      --dark: #242424;
+      --white: #FFFFFF;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: 'Poppins', sans-serif;
-      background: url('https://res.cloudinary.com/dzjdhooce/image/upload/v1791015955/33436667_8036571_bnr0ux.jpg') no-repeat center center fixed;
+      margin: 0;
+      min-height: 100vh;
+      padding: 55px 20px 40px;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--dark);
+      background-color: #e9edf0;
+
+      /* Replace this URL with your original Cloudinary background image. */
+      background-image:
+        linear-gradient(rgba(255,255,255,.40), rgba(255,255,255,.40)),
+        url("PASTE_YOUR_ORIGINAL_CLOUDINARY_IMAGE_URL_HERE");
       background-size: cover;
-      margin-top: 5%;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start;
-      align-items: center;
+      background-position: center;
+      background-attachment: fixed;
+      background-repeat: no-repeat;
     }
 
     h1 {
+      margin: 10px 0 30px;
       text-align: center;
-      font-size: 2em;
-      color: #E2403E;
-      margin: 30px 10px 25px 10px;
-      padding: 1%;
-      border: 3px dashed #DEAC2F;
-    border-radius: 20px;
-    box-shadow: 0 0 5px rgba(55, 110, 157, 0.2);
-    background-color: rgba(255, 255, 255, 0.8);
+      color: var(--blue);
+      font-size: 2.5em;
+      font-weight: 800;
+      line-height: 1.15;
     }
 
     .container {
       width: 100%;
       max-width: 600px;
       margin: 0 auto;
-      background: rgba(255, 255, 255, 0.85);
-      padding: 40px;
+      padding: 35px;
+      background: rgba(255,255,255,.96);
       border-radius: 20px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.2);
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
+      box-shadow: 0 10px 35px rgba(0,0,0,.16);
     }
 
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+    .intro {
+      margin: 0 0 25px;
+      text-align: center;
+      line-height: 1.6;
+      color: #555;
     }
 
-    input {
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 700;
+      color: var(--blue);
+    }
+
+    input,
+    select,
+    textarea {
+      display: block;
       width: 100%;
-      padding: 15px 10px;
-      border: none;
-      border-radius: 8px;
-      font-size: 0.9em;
-      box-shadow: 2px 2px #DEAC2F;
+      min-width: 0;
+      padding: 13px 14px;
+      border: 1px solid #ccd3d9;
+      border-radius: 9px;
+      background: #fff;
+      color: var(--dark);
+      font: inherit;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+
+    textarea {
+      min-height: 85px;
+      resize: vertical;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: var(--blue);
+      box-shadow: 0 0 0 3px rgba(55,110,157,.13);
+    }
+
+    .form-buttons {
+      display: flex;
+      gap: 12px;
+      width: 100%;
+      margin-top: 25px;
     }
 
     button {
-      background: #376E9D;
-      color: #fff;
-      border: none;
-      padding: 12px 16px;
-      font-size: 1em;
-      border-radius: 10px;
+      border: 0;
+      border-radius: 9px;
+      padding: 15px 18px;
+      font: inherit;
+      font-weight: 700;
       cursor: pointer;
-      transition: 0.2s ease;
+      transition: background .2s, transform .15s, opacity .2s;
     }
 
-    button:hover {
-      background: #7FA347;
-      transform: scale(1.05);
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .form-buttons button {
+      flex: 1;
+      min-width: 0;
+      margin: 0;
+    }
+
+    #submitButton {
+      background: var(--red);
+      color: var(--white);
+    }
+
+    #submitButton:hover:not(:disabled) {
+      background: #c93432;
+    }
+
+    #editWishlistButton {
+      background: var(--yellow);
+      color: var(--dark);
+    }
+
+    #editWishlistButton:hover:not(:disabled) {
+      background: var(--green);
+      color: var(--white);
     }
 
     .admin-login {
       position: fixed;
       top: 15px;
-      right: 20px;
-      background: rgba(255, 255, 255, 0.2);
-      color: #fff;
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.6);
-      cursor: pointer;
-      font-size: 0.85em;
-      transition: 0.3s ease;
-      z-index: 9999;
-      text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+      right: 15px;
+      z-index: 5;
+      padding: 8px 13px;
+      border-radius: 7px;
+      background: rgba(255,255,255,.9);
+      color: var(--blue);
+      font-size: .8em;
+      box-shadow: 0 2px 8px rgba(0,0,0,.08);
     }
 
-    .admin-login:hover {
-      background: rgba(255, 75, 75, 0.9);
-      color: #fff;
-      text-shadow: 0 0 8px #fff;
-      transform: scale(1.05);
-    }
-
-    /* Modal */
+    /* General success/error modal */
     .modal {
       display: none;
       position: fixed;
-      z-index: 9998;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background-color:white;
-      justify-content: center;
+      inset: 0;
+      z-index: 1000;
       align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: rgba(0,0,0,.55);
     }
 
     .modal-content {
-      background:white;
-      padding: 30px 40px;
-      border-radius: 15px;
-      text-align: center;
-      color:seagreen;
-      font-size: 1.1em;
+      width: 100%;
       max-width: 400px;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
-      animation: fadeIn 0.3s ease;
+      padding: 30px;
+      border-radius: 15px;
+      background: #fff;
+      text-align: center;
+      font-size: 1.05em;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+      box-shadow: 0 10px 35px rgba(0,0,0,.2);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.9);} 
-      to { opacity: 1; transform: scale(1);} 
+    /* Edit wishlist popup */
+    #editWishlistModal {
+      background: rgba(0,0,0,.65);
     }
 
-    /* Mobile & Tablet Responsive */
+    #editWishlistModal .edit-modal-content {
+      position: relative;
+      width: 100%;
+      max-width: 430px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 35px 28px 28px;
+      color: var(--blue);
+      text-align: left;
+    }
+
+    #editWishlistModal h2 {
+      margin: 0 25px 12px 0;
+      color: var(--red);
+      font-size: 1.6em;
+    }
+
+    #editWishlistModal p {
+      line-height: 1.5;
+    }
+
+    #editWishlistModal .close-edit-modal {
+      position: absolute;
+      top: 8px;
+      right: 12px;
+      width: auto;
+      margin: 0;
+      padding: 3px 9px;
+      background: transparent;
+      color: #555;
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    #editWishlistModal .close-edit-modal:hover {
+      color: var(--red);
+      transform: none;
+    }
+
+    #editWishlistForm {
+      margin-top: 20px;
+    }
+
+    #editWishlistForm button {
+      width: 100%;
+      margin-top: 5px;
+      background: var(--blue);
+      color: #fff;
+    }
+
+    #editWishlistForm button:hover:not(:disabled) {
+      background: #28567e;
+    }
+
+    #editWishlistMessage {
+      min-height: 1.4em;
+      margin-bottom: 0;
+      font-size: .9em;
+      overflow-wrap: anywhere;
+    }
+
     @media (max-width: 768px) {
       body {
-        margin-top:25%;
-        
+        padding: 65px 12px 24px;
+        background-attachment: scroll;
+      }
+
       h1 {
-        font-size: 2em;
         margin: 20px 10px;
+        font-size: 2em;
       }
 
       .container {
+        width: 100%;
+        max-width: 600px;
         padding: 25px;
-        max-width: 80%;
         border-radius: 15px;
       }
 
-      input {
-        padding: 22px 8px;
-        font-size: 0.85em;
-      }
-
-      button {
-        margin-top:10%;
-        padding: 20px 12px;
-        font-size: 0.95em;
+      input,
+      select,
+      textarea {
+        font-size: .95em;
       }
 
       .admin-login {
         top: 10px;
         right: 10px;
-        font-size: 0.75em;
+        font-size: .75em;
         padding: 5px 10px;
       }
 
+      .form-buttons {
+        flex-direction: column;
+      }
+
+      .form-buttons button {
+        width: 100%;
+      }
+
       .modal-content {
-        padding: 20px;
+        padding: 24px;
         font-size: 1em;
-        max-width: 90%;
       }
     }
 
-    /* Extra small phones (iPhone 11 Pro / X / XS) */
     @media (max-width: 414px) {
       h1 {
-        font-size: 1.4em;
+        font-size: 1.6em;
       }
 
       .container {
         padding: 20px;
       }
 
-      input, button {
-        font-size: 0.85em;
-        padding: 10px 8px;
+      .form-buttons button {
+        font-size: .9em;
+        padding: 13px 8px;
       }
 
-      .modal-content {
-        font-size: 0.95em;
+      #editWishlistModal .edit-modal-content {
+        padding: 32px 20px 22px;
       }
     }
-
   </style>
 </head>
+
 <body>
+
+  <button type="button" class="admin-login" id="adminLoginButton">
+    Admin Login
+  </button>
 
   <h1>2026 Exchange Gift Form</h1>
 
-  <div class="container">
+  <main class="container">
+    <p class="intro">
+      Share your wishlist and let the gift-giving fun begin!
+      Fill in your details and tell us what you would love to receive.
+    </p>
+
     <form id="ghoulForm">
-      <input name="realName" placeholder="Real Name*" required>
-      <input name="wish1" placeholder="Wish Item 1">
-      <input name="wish2" placeholder="Wish Item 2">
-      <input name="wish3" placeholder="Wish Item 3">
-      <button type="submit">Submit My Entry!</button>
+      <div class="form-group">
+        <label for="realName">Real Name</label>
+        <input
+          type="text"
+          id="realName"
+          name="realName"
+          placeholder="Enter your real name"
+          autocomplete="name"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="codeName">Code Name</label>
+        <input
+          type="text"
+          id="codeName"
+          name="codeName"
+          placeholder="Enter your code name"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="gender">Gender</label>
+        <select id="gender" name="gender">
+          <option value="">Select an option</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Prefer not to say">Prefer not to say</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="wish1">Wishlist #1</label>
+        <textarea
+          id="wish1"
+          name="wish1"
+          placeholder="Your first gift idea"
+          required
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="wish2">Wishlist #2</label>
+        <textarea
+          id="wish2"
+          name="wish2"
+          placeholder="Your second gift idea"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="wish3">Wishlist #3</label>
+        <textarea
+          id="wish3"
+          name="wish3"
+          placeholder="Your third gift idea"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="coffeeOrder">Coffee Order</label>
+        <input
+          type="text"
+          id="coffeeOrder"
+          name="coffeeOrder"
+          placeholder="Your usual coffee order"
+        >
+      </div>
+
+      <div class="form-buttons">
+        <button type="submit" id="submitButton">
+          Submit My Entry!
+        </button>
+
+        <button type="button" id="editWishlistButton">
+          Edit My Wishlist
+        </button>
+      </div>
     </form>
+  </main>
+
+  <!-- General submission status modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true">
+    <div class="modal-content" id="modalContent">
+      Saving your entry...
+    </div>
   </div>
 
-  <div class="admin-login" id="adminLogin">🔑 Admin</div>
+  <!-- Edit wishlist lookup modal -->
+  <div id="editWishlistModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editWishlistTitle">
+    <div class="modal-content edit-modal-content">
+      <button
+        type="button"
+        id="closeEditModal"
+        class="close-edit-modal"
+        aria-label="Close popup"
+      >&times;</button>
 
-  <div id="modal" class="modal">
-    <div class="modal-content" id="modalContent">Saving your entry…</div>
+      <h2 id="editWishlistTitle">Edit My Wishlist</h2>
+
+      <p>Please enter your name to edit your wishlist:</p>
+
+      <form id="editWishlistForm">
+        <input
+          type="text"
+          id="editWishlistName"
+          placeholder="Enter your real name"
+          autocomplete="name"
+          required
+        >
+
+        <button type="submit" id="findWishlistButton">
+          Find My Wishlist
+        </button>
+      </form>
+
+      <p id="editWishlistMessage" role="status" aria-live="polite"></p>
+    </div>
   </div>
 
   <script>
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbxXeDNBzY8kOLAAa4hgnax6HYAJPBekCi8fYnwVzdkqs6v8nKKmuIWStM-fVIqXbpmYeg/exec';
-    const form = document.getElementById('ghoulForm');
-    const modal = document.getElementById('modal');
-    const modalContent = document.getElementById('modalContent');
-    const adminLogin = document.getElementById('adminLogin');
+    // Google Apps Script Web App URL
+    const scriptURL =
+      "https://script.google.com/macros/s/AKfycbxXeDNBzY8kOLAAa4hgnax6HYAJPBekCi8fYnwVzdkqs6v8nKKmuIWStM-fVIqXbpmYeg/exec";
 
-    form.addEventListener('submit', async e => {
-      e.preventDefault();
-      modal.style.display = 'flex';
-      modalContent.textContent = 'Saving your entry…';
+    // Google Sheet
+    const spreadsheetURL =
+      "https://docs.google.com/spreadsheets/d/124LIz_k7aQ3u3Z8Om_PZnb9mxkeZtHAPsPSce2bpPl0/edit";
+
+    const form = document.getElementById("ghoulForm");
+    const submitButton = document.getElementById("submitButton");
+
+    const modal = document.getElementById("modal");
+    const modalContent = document.getElementById("modalContent");
+
+    const editWishlistButton =
+      document.getElementById("editWishlistButton");
+    const editWishlistModal =
+      document.getElementById("editWishlistModal");
+    const closeEditModal =
+      document.getElementById("closeEditModal");
+    const editWishlistForm =
+      document.getElementById("editWishlistForm");
+    const editWishlistName =
+      document.getElementById("editWishlistName");
+    const editWishlistMessage =
+      document.getElementById("editWishlistMessage");
+    const findWishlistButton =
+      document.getElementById("findWishlistButton");
+
+    let isEditingWishlist = false;
+    let originalWishlistName = "";
+    let modalTimeout;
+
+    function showStatus(message) {
+      modalContent.textContent = message;
+      modal.style.display = "flex";
+
+      clearTimeout(modalTimeout);
+      modalTimeout = setTimeout(() => {
+        modal.style.display = "none";
+      }, 3000);
+    }
+
+    function showEditMessage(message) {
+      editWishlistMessage.textContent = message;
+    }
+
+    // Look up a saved wishlist using JSONP to avoid browser CORS issues.
+    function lookupWishlist(name) {
+      return new Promise((resolve, reject) => {
+        const callbackName =
+          "wishlistCallback_" +
+          Date.now() +
+          "_" +
+          Math.random().toString(36).slice(2);
+
+        const script = document.createElement("script");
+        const params = new URLSearchParams({
+          action: "lookup",
+          name: name,
+          callback: callbackName
+        });
+
+        let finished = false;
+
+        const timeout = setTimeout(() => {
+          cleanup();
+          reject(
+            new Error("The request timed out. Please try again.")
+          );
+        }, 15000);
+
+        function cleanup() {
+          if (finished) return;
+          finished = true;
+          clearTimeout(timeout);
+          delete window[callbackName];
+          script.remove();
+        }
+
+        window[callbackName] = (data) => {
+          cleanup();
+          resolve(data);
+        };
+
+        script.onerror = () => {
+          cleanup();
+          reject(
+            new Error("Unable to contact the wishlist service.")
+          );
+        };
+
+        script.src = scriptURL + "?" + params.toString();
+        document.body.appendChild(script);
+      });
+    }
+
+    // Open the Edit My Wishlist popup.
+    editWishlistButton.addEventListener("click", () => {
+      editWishlistForm.reset();
+      showEditMessage("");
+      editWishlistModal.style.display = "flex";
+      editWishlistName.focus();
+    });
+
+    // Close the popup with the X button.
+    closeEditModal.addEventListener("click", () => {
+      editWishlistModal.style.display = "none";
+    });
+
+    // Close the popup by clicking the backdrop.
+    editWishlistModal.addEventListener("click", (event) => {
+      if (event.target === editWishlistModal) {
+        editWishlistModal.style.display = "none";
+      }
+    });
+
+    // Allow Escape to close the edit popup.
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        editWishlistModal.style.display = "none";
+      }
+    });
+
+    // Find the participant's existing wishlist.
+    editWishlistForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const name = editWishlistName.value.trim();
+
+      if (!name) {
+        showEditMessage("Please enter your name.");
+        return;
+      }
+
+      findWishlistButton.disabled = true;
+      findWishlistButton.textContent = "Checking...";
+      showEditMessage("Looking for your saved wishlist...");
+
+      try {
+        const result = await lookupWishlist(name);
+
+        if (!result || !result.ok) {
+          showEditMessage(
+            result?.message || "No matching entry was found."
+          );
+          return;
+        }
+
+        const wishlist = result.wishlist;
+
+        // Populate the main form with the saved information.
+        form.elements.namedItem("realName").value =
+          wishlist.realName || "";
+
+        form.elements.namedItem("wish1").value =
+          wishlist.wish1 || "";
+
+        form.elements.namedItem("wish2").value =
+          wishlist.wish2 || "";
+
+        form.elements.namedItem("wish3").value =
+          wishlist.wish3 || "";
+
+        // Preserve the original name used to locate the row.
+        originalWishlistName = wishlist.realName;
+        isEditingWishlist = true;
+
+        submitButton.textContent = "Update My Wishlist";
+
+        editWishlistModal.style.display = "none";
+
+        form.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+
+        showStatus("Your wishlist has been loaded. You can now edit it.");
+      } catch (error) {
+        console.error(error);
+        showEditMessage(
+          error.message || "Unable to load your wishlist."
+        );
+      } finally {
+        findWishlistButton.disabled = false;
+        findWishlistButton.textContent = "Find My Wishlist";
+      }
+    });
+
+    // Submit a new entry or update an existing wishlist.
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
 
       const formData = new FormData(form);
 
-      try {
-        const response = await fetch(scriptURL, { method: 'POST', body: formData });
-        const text = await response.text();
+      if (isEditingWishlist) {
+        formData.append("action", "update");
+        formData.append("originalName", originalWishlistName);
+      }
 
-        if (text.trim() === 'Success') {
-          modalContent.textContent = 'Your entry has been saved!';
+      submitButton.disabled = true;
+      editWishlistButton.disabled = true;
+
+      const wasEditing = isEditingWishlist;
+
+      submitButton.textContent = wasEditing
+        ? "Updating..."
+        : "Submitting...";
+
+      modalContent.textContent = wasEditing
+        ? "Updating your wishlist..."
+        : "Saving your entry...";
+
+      modal.style.display = "flex";
+
+      try {
+        const response = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+        });
+
+        const text = (await response.text()).trim();
+
+        if (text === "Success" || text === "Updated") {
+          modalContent.textContent = wasEditing
+            ? "Your wishlist has been updated!"
+            : "Your entry has been saved!";
+
           form.reset();
+
+          isEditingWishlist = false;
+          originalWishlistName = "";
+
+          submitButton.textContent = "Submit My Entry!";
+
+          clearTimeout(modalTimeout);
+          modalTimeout = setTimeout(() => {
+            modal.style.display = "none";
+          }, 2500);
         } else {
-          throw new Error(text);
+          throw new Error(
+            text || "The server returned an unexpected response."
+          );
         }
       } catch (error) {
-        console.error('Error:', error);
-        modalContent.textContent = '⚠️ Something went wrong. Please try again.';
+        console.error(error);
+
+        modalContent.textContent =
+          "Something went wrong while saving your entry. Please try again.";
+
+        clearTimeout(modalTimeout);
+        modalTimeout = setTimeout(() => {
+          modal.style.display = "none";
+        }, 4000);
       } finally {
-        setTimeout(() => (modal.style.display = 'none'), 2500);
+        submitButton.disabled = false;
+        editWishlistButton.disabled = false;
+
+        if (!isEditingWishlist) {
+          submitButton.textContent = "Submit My Entry!";
+        } else {
+          submitButton.textContent = "Update My Wishlist";
+        }
       }
     });
 
-    adminLogin.addEventListener('click', () => {
-      const password = prompt('Enter Admin Password:');
-      if (password === 'gifts2026') {
-        window.open('https://docs.google.com/spreadsheets/d/124LIz_k7aQ3u3Z8Om_PZnb9mxkeZtHAPsPSce2bpPl0/edit?gid=0#gid=0', '_blank');
-      } else if (password) {
-        alert('❌ Wrong password, spirit denied access!');
-      }
-    });
+    // Existing admin shortcut.
+    document
+      .getElementById("adminLoginButton")
+      .addEventListener("click", () => {
+        const password = prompt("Enter admin password:");
+
+        if (password === "gips2025") {
+          window.open(spreadsheetURL, "_blank", "noopener");
+        } else if (password !== null) {
+          alert("Incorrect password.");
+        }
+      });
   </script>
-
 </body>
 </html>

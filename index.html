@@ -29,13 +29,7 @@
       background-color: #e9edf0;
 
       /* Replace with your original Cloudinary background image URL. */
-      background-image:
-        linear-gradient(
-          rgba(255, 255, 255, .40),
-          rgba(255, 255, 255, .40)
-        ),
-        url("https://res.cloudinary.com/dzjdhooce/image/upload/v1791015955/33436667_8036571_bnr0ux.jpg");
-
+      background-image:url("https://res.cloudinary.com/dzjdhooce/image/upload/v1791015955/33436667_8036571_bnr0ux.jpg");
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -356,59 +350,39 @@
 
   <main class="container">
     <p class="intro">
-      Share your wishlist and let the gift-giving fun begin!
+      Let the gift-giving fun begin!
       Fill in your details and tell us what you would love to receive.
     </p>
 
     <form id="ghoulForm">
       <div class="form-group">
-        <label for="realName">Real Name</label>
+        <label for="realName">Name</label>
         <input
           type="text"
           id="realName"
           name="realName"
-          placeholder="Enter your real name"
+          placeholder="Enter your Real Name"
           autocomplete="name"
           required
         >
       </div>
 
       <div class="form-group">
-        <label for="codeName">Code Name</label>
-        <input
-          type="text"
-          id="codeName"
-          name="codeName"
-          placeholder="Enter your code name"
-        >
-      </div>
-
-      <div class="form-group">
-        <label for="gender">Gender</label>
-        <select id="gender" name="gender">
-          <option value="">Select an option</option>
-          <option value="Male">Male</option>
-          <option value="Female">Female</option>
-          <option value="Prefer not to say">Prefer not to say</option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label for="wish1">Wishlist #1</label>
+        <label for="wish1">Wishlist Entry #1</label>
         <textarea
           id="wish1"
           name="wish1"
-          placeholder="Your first gift idea"
+          placeholder="Enter your most wanted gift here!"
           required
         ></textarea>
       </div>
 
       <div class="form-group">
-        <label for="wish2">Wishlist #2</label>
+        <label for="wish2">Wishlist Entry #2</label>
         <textarea
           id="wish2"
           name="wish2"
-          placeholder="Your second gift idea"
+          placeholder="Your second gift alternative"
         ></textarea>
       </div>
 
@@ -417,23 +391,13 @@
         <textarea
           id="wish3"
           name="wish3"
-          placeholder="Your third gift idea"
+          placeholder="Your third gift alternative"
         ></textarea>
-      </div>
-
-      <div class="form-group">
-        <label for="coffeeOrder">Coffee Order</label>
-        <input
-          type="text"
-          id="coffeeOrder"
-          name="coffeeOrder"
-          placeholder="Your usual coffee order"
-        >
       </div>
 
       <div class="form-buttons">
         <button type="submit" id="submitButton">
-          Submit My Entry!
+          Save/Submit My Entry
         </button>
 
         <button type="button" id="editWishlistButton">
@@ -468,7 +432,7 @@
 
       <h2 id="editWishlistTitle">Edit My Wishlist</h2>
 
-      <p>Please enter your name to edit your wishlist:</p>
+      <p>Please enter your name to edit your existing wishlist:</p>
 
       <form id="editWishlistForm">
         <input

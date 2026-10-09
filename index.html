@@ -28,10 +28,14 @@
       color: var(--dark);
       background-color: #e9edf0;
 
-      /* Replace this URL with your original Cloudinary background image. */
+      /* Replace with your original Cloudinary background image URL. */
       background-image:
-        linear-gradient(rgba(255,255,255,.40), rgba(255,255,255,.40)),
+        linear-gradient(
+          rgba(255, 255, 255, .40),
+          rgba(255, 255, 255, .40)
+        ),
         url("https://res.cloudinary.com/dzjdhooce/image/upload/v1791015955/33436667_8036571_bnr0ux.jpg");
+
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -52,9 +56,9 @@
       max-width: 600px;
       margin: 0 auto;
       padding: 35px;
-      background: rgba(255,255,255,.96);
+      background: rgba(255, 255, 255, .96);
       border-radius: 20px;
-      box-shadow: 0 10px 35px rgba(0,0,0,.16);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, .16);
     }
 
     .intro {
@@ -100,7 +104,7 @@
     select:focus,
     textarea:focus {
       border-color: var(--blue);
-      box-shadow: 0 0 0 3px rgba(55,110,157,.13);
+      box-shadow: 0 0 0 3px rgba(55, 110, 157, .13);
     }
 
     .form-buttons {
@@ -161,13 +165,13 @@
       z-index: 5;
       padding: 8px 13px;
       border-radius: 7px;
-      background: rgba(255,255,255,.9);
+      background: rgba(255, 255, 255, .9);
       color: var(--blue);
       font-size: .8em;
-      box-shadow: 0 2px 8px rgba(0,0,0,.08);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
     }
 
-    /* General success/error modal */
+    /* General submission and duplicate-warning modal */
     .modal {
       display: none;
       position: fixed;
@@ -176,12 +180,12 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background: rgba(0,0,0,.55);
+      background: rgba(0, 0, 0, .55);
     }
 
     .modal-content {
       width: 100%;
-      max-width: 400px;
+      max-width: 430px;
       padding: 30px;
       border-radius: 15px;
       background: #fff;
@@ -189,12 +193,29 @@
       font-size: 1.05em;
       line-height: 1.6;
       overflow-wrap: anywhere;
-      box-shadow: 0 10px 35px rgba(0,0,0,.2);
+      box-shadow: 0 10px 35px rgba(0, 0, 0, .2);
+    }
+
+    .modal-content p {
+      margin: 0;
+    }
+
+    /* Duplicate warning action button */
+    .duplicate-edit-button {
+      display: block;
+      width: 100%;
+      margin-top: 18px;
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .duplicate-edit-button:hover:not(:disabled) {
+      background: #28567e;
     }
 
     /* Edit wishlist popup */
     #editWishlistModal {
-      background: rgba(0,0,0,.65);
+      background: rgba(0, 0, 0, .65);
     }
 
     #editWishlistModal .edit-modal-content {
@@ -212,6 +233,7 @@
       margin: 0 25px 12px 0;
       color: var(--red);
       font-size: 1.6em;
+      line-height: 1.3;
     }
 
     #editWishlistModal p {
@@ -421,7 +443,7 @@
     </form>
   </main>
 
-  <!-- General submission status modal -->
+  <!-- General submission and duplicate warning modal -->
   <div id="modal" class="modal" role="dialog" aria-modal="true">
     <div class="modal-content" id="modalContent">
       Saving your entry...
@@ -429,7 +451,13 @@
   </div>
 
   <!-- Edit wishlist lookup modal -->
-  <div id="editWishlistModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="editWishlistTitle">
+  <div
+    id="editWishlistModal"
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="editWishlistTitle"
+  >
     <div class="modal-content edit-modal-content">
       <button
         type="button"
@@ -456,27 +484,31 @@
         </button>
       </form>
 
-      <p id="editWishlistMessage" role="status" aria-live="polite"></p>
+      <p
+        id="editWishlistMessage"
+        role="status"
+        aria-live="polite"
+      ></p>
     </div>
   </div>
 
   <script>
-    // Google Apps Script Web App URL
+    // Google Apps Script Web App URL.
     const scriptURL =
       "https://script.google.com/macros/s/AKfycbxXeDNBzY8kOLAAa4hgnax6HYAJPBekCi8fYnwVzdkqs6v8nKKmuIWStM-fVIqXbpmYeg/exec";
 
-    // Google Sheet
+    // Google Sheet URL used by the existing admin shortcut.
     const spreadsheetURL =
       "https://docs.google.com/spreadsheets/d/124LIz_k7aQ3u3Z8Om_PZnb9mxkeZtHAPsPSce2bpPl0/edit";
 
     const form = document.getElementById("ghoulForm");
     const submitButton = document.getElementById("submitButton");
+    const editWishlistButton =
+      document.getElementById("editWishlistButton");
 
     const modal = document.getElementById("modal");
     const modalContent = document.getElementById("modalContent");
 
-    const editWishlistButton =
-      document.getElementById("editWishlistButton");
     const editWishlistModal =
       document.getElementById("editWishlistModal");
     const closeEditModal =
@@ -494,21 +526,26 @@
     let originalWishlistName = "";
     let modalTimeout;
 
-    function showStatus(message) {
-      modalContent.textContent = message;
+    function showStatus(message, duration = 3000) {
+      modalContent.replaceChildren();
+
+      const paragraph = document.createElement("p");
+      paragraph.textContent = message;
+      modalContent.appendChild(paragraph);
+
       modal.style.display = "flex";
 
       clearTimeout(modalTimeout);
       modalTimeout = setTimeout(() => {
         modal.style.display = "none";
-      }, 3000);
+      }, duration);
     }
 
     function showEditMessage(message) {
       editWishlistMessage.textContent = message;
     }
 
-    // Look up a saved wishlist using JSONP to avoid browser CORS issues.
+    // Look up a saved wishlist using JSONP.
     function lookupWishlist(name) {
       return new Promise((resolve, reject) => {
         const callbackName =
@@ -518,6 +555,7 @@
           Math.random().toString(36).slice(2);
 
         const script = document.createElement("script");
+
         const params = new URLSearchParams({
           action: "lookup",
           name: name,
@@ -535,6 +573,7 @@
 
         function cleanup() {
           if (finished) return;
+
           finished = true;
           clearTimeout(timeout);
           delete window[callbackName];
@@ -558,34 +597,127 @@
       });
     }
 
-    // Open the Edit My Wishlist popup.
+    // Load a retrieved wishlist into the homepage form.
+    function loadWishlistIntoForm(wishlist) {
+      form.elements.namedItem("realName").value =
+        wishlist.realName || "";
+
+      form.elements.namedItem("wish1").value =
+        wishlist.wish1 || "";
+
+      form.elements.namedItem("wish2").value =
+        wishlist.wish2 || "";
+
+      form.elements.namedItem("wish3").value =
+        wishlist.wish3 || "";
+
+      originalWishlistName = wishlist.realName;
+      isEditingWishlist = true;
+
+      submitButton.textContent = "Update My Wishlist";
+
+      modal.style.display = "none";
+      editWishlistModal.style.display = "none";
+
+      form.scrollIntoView({
+        behavior: "smooth",
+        block: "center"
+      });
+    }
+
+    // Display the duplicate warning with an Edit My Wishlist button.
+    function showDuplicateWarning() {
+      modalContent.replaceChildren();
+
+      const warning = document.createElement("p");
+      warning.textContent =
+        "You have an existing entry. Would you like to edit that instead?";
+
+      const editButton = document.createElement("button");
+      editButton.type = "button";
+      editButton.className = "duplicate-edit-button";
+      editButton.textContent = "Edit My Wishlist";
+
+      editButton.addEventListener("click", async () => {
+        const name =
+          form.elements.namedItem("realName").value.trim();
+
+        if (!name) {
+          showStatus("Please enter your real name first.");
+          return;
+        }
+
+        editButton.disabled = true;
+        editButton.textContent = "Loading Wishlist...";
+
+        try {
+          const result = await lookupWishlist(name);
+
+          if (!result || !result.ok) {
+            modalContent.replaceChildren();
+
+            const message = document.createElement("p");
+            message.textContent =
+              result?.message ||
+              "Unable to find your existing wishlist. Please try again.";
+
+            modalContent.appendChild(message);
+            return;
+          }
+
+          loadWishlistIntoForm(result.wishlist);
+
+        } catch (error) {
+          console.error(error);
+
+          modalContent.replaceChildren();
+
+          const message = document.createElement("p");
+          message.textContent =
+            error.message ||
+            "Unable to load your wishlist. Please try again.";
+
+          modalContent.appendChild(message);
+
+        } finally {
+          editButton.disabled = false;
+          editButton.textContent = "Edit My Wishlist";
+        }
+      });
+
+      modalContent.append(warning, editButton);
+      modal.style.display = "flex";
+    }
+
+    // Open the homepage's Edit My Wishlist popup.
     editWishlistButton.addEventListener("click", () => {
       editWishlistForm.reset();
       showEditMessage("");
+
       editWishlistModal.style.display = "flex";
       editWishlistName.focus();
     });
 
-    // Close the popup with the X button.
+    // Close the edit popup.
     closeEditModal.addEventListener("click", () => {
       editWishlistModal.style.display = "none";
     });
 
-    // Close the popup by clicking the backdrop.
+    // Close the edit popup by clicking its backdrop.
     editWishlistModal.addEventListener("click", (event) => {
       if (event.target === editWishlistModal) {
         editWishlistModal.style.display = "none";
       }
     });
 
-    // Allow Escape to close the edit popup.
+    // Escape closes the edit popup.
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape") {
         editWishlistModal.style.display = "none";
       }
     });
 
-    // Find the participant's existing wishlist.
+    // Find an existing wishlist from the edit popup.
     editWishlistForm.addEventListener("submit", async (event) => {
       event.preventDefault();
 
@@ -610,40 +742,15 @@
           return;
         }
 
-        const wishlist = result.wishlist;
+        loadWishlistIntoForm(result.wishlist);
 
-        // Populate the main form with the saved information.
-        form.elements.namedItem("realName").value =
-          wishlist.realName || "";
-
-        form.elements.namedItem("wish1").value =
-          wishlist.wish1 || "";
-
-        form.elements.namedItem("wish2").value =
-          wishlist.wish2 || "";
-
-        form.elements.namedItem("wish3").value =
-          wishlist.wish3 || "";
-
-        // Preserve the original name used to locate the row.
-        originalWishlistName = wishlist.realName;
-        isEditingWishlist = true;
-
-        submitButton.textContent = "Update My Wishlist";
-
-        editWishlistModal.style.display = "none";
-
-        form.scrollIntoView({
-          behavior: "smooth",
-          block: "center"
-        });
-
-        showStatus("Your wishlist has been loaded. You can now edit it.");
       } catch (error) {
         console.error(error);
+
         showEditMessage(
           error.message || "Unable to load your wishlist."
         );
+
       } finally {
         findWishlistButton.disabled = false;
         findWishlistButton.textContent = "Find My Wishlist";
@@ -655,8 +762,9 @@
       event.preventDefault();
 
       const formData = new FormData(form);
+      const wasEditing = isEditingWishlist;
 
-      if (isEditingWishlist) {
+      if (wasEditing) {
         formData.append("action", "update");
         formData.append("originalName", originalWishlistName);
       }
@@ -664,17 +772,16 @@
       submitButton.disabled = true;
       editWishlistButton.disabled = true;
 
-      const wasEditing = isEditingWishlist;
-
       submitButton.textContent = wasEditing
         ? "Updating..."
         : "Submitting...";
 
-      modalContent.textContent = wasEditing
-        ? "Updating your wishlist..."
-        : "Saving your entry...";
-
-      modal.style.display = "flex";
+      showStatus(
+        wasEditing
+          ? "Updating your wishlist..."
+          : "Saving your entry...",
+        30000
+      );
 
       try {
         const response = await fetch(scriptURL, {
@@ -684,10 +791,18 @@
 
         const text = (await response.text()).trim();
 
-        if (text === "Success" || text === "Updated") {
-          modalContent.textContent = wasEditing
-            ? "Your wishlist has been updated!"
-            : "Your entry has been saved!";
+        // A duplicate is detected before any new row is added.
+        if (text === "Duplicate" && !wasEditing) {
+          clearTimeout(modalTimeout);
+          showDuplicateWarning();
+
+        } else if (text === "Success" || text === "Updated") {
+          showStatus(
+            wasEditing
+              ? "Your wishlist has been updated!"
+              : "Your entry has been saved!",
+            2500
+          );
 
           form.reset();
 
@@ -696,34 +811,27 @@
 
           submitButton.textContent = "Submit My Entry!";
 
-          clearTimeout(modalTimeout);
-          modalTimeout = setTimeout(() => {
-            modal.style.display = "none";
-          }, 2500);
         } else {
           throw new Error(
             text || "The server returned an unexpected response."
           );
         }
+
       } catch (error) {
         console.error(error);
 
-        modalContent.textContent =
-          "Something went wrong while saving your entry. Please try again.";
+        showStatus(
+          "Something went wrong while saving your entry. Please try again.",
+          4000
+        );
 
-        clearTimeout(modalTimeout);
-        modalTimeout = setTimeout(() => {
-          modal.style.display = "none";
-        }, 4000);
       } finally {
         submitButton.disabled = false;
         editWishlistButton.disabled = false;
 
-        if (!isEditingWishlist) {
-          submitButton.textContent = "Submit My Entry!";
-        } else {
-          submitButton.textContent = "Update My Wishlist";
-        }
+        submitButton.textContent = isEditingWishlist
+          ? "Update My Wishlist"
+          : "Submit My Entry!";
       }
     });
 
@@ -734,7 +842,11 @@
         const password = prompt("Enter admin password:");
 
         if (password === "gips2025") {
-          window.open(spreadsheetURL, "_blank", "noopener");
+          window.open(
+            spreadsheetURL,
+            "_blank",
+            "noopener"
+          );
         } else if (password !== null) {
           alert("Incorrect password.");
         }
